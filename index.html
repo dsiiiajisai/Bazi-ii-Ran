@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000073">
+<title>Bazi Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #000073;
+    --sky: #00BFFF;
+    --white: #ffffff;
+    --dim: rgba(255,255,255,0.12);
+    --dim2: rgba(0,191,255,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Crimson Pro', Georgia, serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCREENS ──────────────────────────────── */
+  .screen { display: none; min-height: 100dvh; flex-direction: column; align-items: center; padding: 0 20px 40px; }
+  .screen.active { display: flex; }
+
+  /* ─── HOME ──────────────────────────────────── */
+  #home {
+    justify-content: center;
+    gap: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(0,191,255,0.12) 0%, transparent 65%),
+                linear-gradient(180deg, #000073 0%, #00004a 100%);
+  }
+
+  .logo-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 36px; animation: fadeDown 0.8s ease both;
+  }
+  .logo-wrap img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 14px; filter: drop-shadow(0 0 18px rgba(0,191,255,0.5)); }
+  .logo-title { font-family: 'Cinzel', serif; font-size: 22px; letter-spacing: 0.2em; color: var(--sky); font-weight: 600; }
+  .logo-sub { font-size: 14px; color: rgba(255,255,255,0.45); letter-spacing: 0.15em; margin-top: 4px; }
+
+  .home-question {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: fadeDown 0.8s 0.15s ease both;
+  }
+
+  .home-cards { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 14px; animation: fadeUp 0.8s 0.25s ease both; }
+
+  .home-card {
+    background: var(--dim);
+    border: 1px solid rgba(0,191,255,0.25);
+    border-radius: 16px;
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s, transform 0.2s;
+    text-decoration: none;
+    color: inherit;
+    -webkit-user-select: none;
+    backdrop-filter: blur(4px);
+  }
+  .home-card:active { transform: scale(0.97); background: rgba(0,191,255,0.12); border-color: var(--sky); }
+
+  .card-icon { font-size: 34px; flex-shrink: 0; width: 48px; text-align: center; }
+  .card-text { flex: 1; }
+  .card-title { font-family: 'Cinzel', serif; font-size: 15px; font-weight: 600; letter-spacing: 0.08em; color: var(--sky); margin-bottom: 3px; }
+  .card-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .card-arrow { font-size: 18px; color: rgba(0,191,255,0.5); flex-shrink: 0; }
+
+  /* ─── INNER HEADER ──────────────────────────── */
+  .inner-header {
+    width: 100%; max-width: 520px;
+    display: flex; align-items: center; gap: 12px;
+    padding: 20px 0 24px;
+    border-bottom: 1px solid var(--dim);
+    margin-bottom: 28px;
+    flex-shrink: 0;
+  }
+  .back-btn {
+    background: none; border: none; color: var(--sky);
+    font-size: 26px; cursor: pointer; padding: 4px 8px 4px 0;
+    line-height: 1; flex-shrink: 0;
+    transition: opacity 0.2s;
+  }
+  .back-btn:active { opacity: 0.5; }
+  .inner-title { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 0.15em; color: rgba(255,255,255,0.7); }
+
+  /* ─── FIND 2Hs ──────────────────────────────── */
+  #find2hs {
+    padding-top: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,191,255,0.08) 0%, transparent 60%),
+                linear-gradient(180deg, #000073 0%, #00004a 100%);
+  }
+
+  #find2hs .inner-header { margin-top: 20px; }
+
+  .search-box-wrap { width: 100%; max-width: 520px; margin-bottom: 28px; flex-shrink: 0; }
+  .search-label { font-size: 13px; letter-spacing: 0.12em; color: rgba(255,255,255,0.45); text-transform: uppercase; margin-bottom: 10px; display: block; }
+  #idInput {
+    width: 100%; padding: 18px 20px; font-size: 22px;
+    font-family: 'Cinzel', serif; letter-spacing: 0.15em;
+    border-radius: 12px; border: 2px solid rgba(0,191,255,0.4);
+    background: rgba(0,0,0,0.3); color: var(--white);
+    text-align: center; text-transform: uppercase; outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  #idInput:focus { border-color: var(--sky); }
+  #idInput::placeholder { color: rgba(255,255,255,0.2); font-size: 14px; letter-spacing: 0.1em; }
+
+  .find-results { width: 100%; max-width: 520px; flex: 1; }
+
+  .system-label { font-size: 14px; color: var(--sky); letter-spacing: 0.12em; text-align: center; margin-bottom: 20px; display: none; }
+  .sub-label { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; margin: 24px 0 10px; display: none; }
+  .no-result { color: #ff8a80; text-align: center; font-size: 14px; letter-spacing: 0.1em; display: none; padding: 20px 0; }
+
+  .result-btn {
+    display: none;
+    width: 100%; padding: 20px;
+    border-radius: 14px; border: 1px solid rgba(255,255,255,0.15);
+    text-align: center; text-decoration: none; color: inherit;
+    flex-direction: column; align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 12px;
+  }
+  .result-btn:active { transform: scale(0.97); box-shadow: 0 0 30px rgba(255,255,255,0.3); }
+  .result-num { font-family: 'Cinzel', serif; font-size: 36px; font-weight: 700; margin-bottom: 6px; }
+  .result-label { font-size: 22px; }
+
+  /* ─── DIRECTORY ─────────────────────────────── */
+  #directory { padding-top: 0; overflow-y: auto; }
+  #directory .inner-header { margin-top: 20px; }
+
+  .dir-grid {
+    width: 100%; max-width: 520px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding-bottom: 20px;
+  }
+
+  .dir-item {
+    border-radius: 12px;
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 88px; justify-content: center;
+  }
+  .dir-item:active { transform: scale(0.95); box-shadow: 0 0 20px rgba(255,255,255,0.25); }
+  .dir-num { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; margin-bottom: 5px; }
+  .dir-label { font-size: 17px; line-height: 1.2; }
+
+  /* ─── QUICK SEARCH ──────────────────────────── */
+  #quicksearch {
+    padding-top: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,191,255,0.08) 0%, transparent 60%),
+                linear-gradient(180deg, #000073 0%, #00004a 100%);
+  }
+  #quicksearch .inner-header { margin-top: 20px; }
+
+  .qs-grid {
+    width: 100%; max-width: 520px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 20px;
+  }
+  .qs-item {
+    border-radius: 12px;
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 88px; justify-content: center;
+  }
+  .qs-item:active { transform: scale(0.95); box-shadow: 0 0 20px rgba(255,255,255,0.25); }
+  .qs-num { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; margin-bottom: 5px; }
+  .qs-label { font-size: 17px; line-height: 1.2; }
+
+  /* ─── DETAIL SHEET ──────────────────────────── */
+  #detail {
+    padding-top: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,191,255,0.08) 0%, transparent 60%),
+                linear-gradient(180deg, #000073 0%, #00004a 100%);
+  }
+  #detail .inner-header { margin-top: 20px; }
+
+  .detail-hero {
+    width: 100%; max-width: 340px;
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 28px;
+  }
+  .detail-num { font-family: 'Cinzel', serif; font-size: 52px; font-weight: 700; margin-bottom: 8px; }
+  .detail-label { font-size: 30px; margin-bottom: 0; }
+
+  .detail-links { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 14px; }
+  .detail-link {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 20px;
+    border-radius: 14px;
+    border: 1px solid rgba(0,191,255,0.3);
+    background: rgba(0,0,0,0.3);
+    text-decoration: none; color: var(--white);
+    transition: background 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .detail-link:active { background: rgba(0,191,255,0.12); border-color: var(--sky); }
+  .detail-link-icon { font-size: 24px; flex-shrink: 0; }
+  .detail-link-info { flex: 1; }
+  .detail-link-name { font-family: 'Cinzel', serif; font-size: 14px; color: var(--sky); letter-spacing: 0.08em; margin-bottom: 2px; }
+  .detail-link-desc { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .detail-link-arrow { color: var(--sky); font-size: 18px; }
+
+  /* ─── ANIMATIONS ─────────────────────────────── */
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(16px);  } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body oncontextmenu="return false;">
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="logo-wrap">
+    <img src="https://lh3.googleusercontent.com/sitesv/APaQ0SRRDoqUz3812_quKZkxI8bmm9oW9hhha4a8QxFuBZ267RCjizAuGhPZNd34db8XSLluwAXS7iKyUz7-zfDzsuNbYI44lG1d5oqtIwVGy01Jd-wI54wx_98gS8lFNop5_YLFJV9wy3cIlbpkIvI2dF0zZ1oYtMMXYdFaupeMAAGp8nNTeyUgbXFD2lhhzVSAWRQntid5i8bB2bHuQXJtOGUVCNSeBp97xMY-=w1280" alt="Logo">
+    <div class="logo-title">BAZI PORTAL</div>
+    <div class="logo-sub">八字 · DESTINY CHART</div>
+  </div>
+  <div class="home-question">What do you want to do?</div>
+  <div class="home-cards">
+    <div class="home-card" onclick="goTo('find2hs')">
+      <div class="card-icon">🔍</div>
+      <div class="card-text">
+        <div class="card-title">Find My 2Hs</div>
+        <div class="card-desc">Enter your ID code to find your personal destiny charts</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="home-card" onclick="goTo('quicksearch')">
+      <div class="card-icon">⚡</div>
+      <div class="card-text">
+        <div class="card-title">Quick Search</div>
+        <div class="card-desc">Browse all 100 combinations and open any chart directly</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="home-card" onclick="goTo('directory')">
+      <div class="card-icon">📖</div>
+      <div class="card-text">
+        <div class="card-title">Directory</div>
+        <div class="card-desc">Full directory of all 100 destiny pair combinations</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+  </div>
+</div>
+
+<!-- FIND 2Hs -->
+<div id="find2hs" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" onclick="goTo('home')">‹</button>
+    <div class="inner-title">FIND MY 2Hs</div>
+  </div>
+  <div class="search-box-wrap">
+    <span class="search-label">Enter your ID Code</span>
+    <input type="text" id="idInput" placeholder="TYPE HERE" autocomplete="off" autocorrect="off" spellcheck="false" oninput="find2Hs()">
+  </div>
+  <div class="find-results">
+    <div id="noResult" class="no-result">✕ &nbsp;ID CODE NOT FOUND</div>
+    <div id="labelPortal" class="system-label">Tap to open your charts 👇</div>
+    <div id="labelRan" class="sub-label">Bazi (iii) Ran</div>
+    <a id="btnRan" class="result-btn" target="_blank">
+      <div class="result-num" id="numRan"></div>
+      <div class="result-label" id="lblRan"></div>
+    </a>
+    <div id="labelYuri" class="sub-label">Bazi (iiii) Yuri</div>
+    <a id="btnYuri" class="result-btn" target="_blank">
+      <div class="result-num" id="numYuri"></div>
+      <div class="result-label" id="lblYuri"></div>
+    </a>
+  </div>
+</div>
+
+<!-- QUICK SEARCH -->
+<div id="quicksearch" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" onclick="goTo('home')">‹</button>
+    <div class="inner-title">QUICK SEARCH</div>
+  </div>
+  <div class="qs-grid" id="qsGrid"></div>
+</div>
+
+<!-- DIRECTORY -->
+<div id="directory" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" onclick="goTo('home')">‹</button>
+    <div class="inner-title">DIRECTORY</div>
+  </div>
+  <div class="dir-grid" id="dirGrid"></div>
+</div>
+
+<!-- DETAIL -->
+<div id="detail" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" id="detailBack" onclick="goTo('quicksearch')">‹</button>
+    <div class="inner-title" id="detailTitle">CHART DETAIL</div>
+  </div>
+  <div class="detail-hero" id="detailHero">
+    <div class="detail-num" id="detailNum"></div>
+    <div class="detail-label" id="detailLabel"></div>
+  </div>
+  <div class="detail-links">
+    <a class="detail-link" id="detailRan" target="_blank">
+      <div class="detail-link-icon">🌿</div>
+      <div class="detail-link-info">
+        <div class="detail-link-name">Bazi (iii) Ran</div>
+        <div class="detail-link-desc">Open Ran's chart analysis</div>
+      </div>
+      <div class="detail-link-arrow">›</div>
+    </a>
+    <a class="detail-link" id="detailYuri" target="_blank">
+      <div class="detail-link-icon">🌸</div>
+      <div class="detail-link-info">
+        <div class="detail-link-name">Bazi (iiii) Yuri</div>
+        <div class="detail-link-desc">Open Yuri's chart analysis</div>
+      </div>
+      <div class="detail-link-arrow">›</div>
+    </a>
+  </div>
+</div>
+
+<script>
+const labels = ["甲♡甲","甲♡乙","甲♡丙","甲♡丁","甲♡戊","甲♡己","甲♡庚","甲♡辛","甲♡壬","甲♡癸","乙♡甲","乙♡乙","乙♡丙","乙♡丁","乙♡戊","乙♡己","乙♡庚","乙♡辛","乙♡壬","乙♡癸","丙♡甲","丙♡乙","丙♡丙","丙♡丁","丙♡戊","丙♡己","丙♡庚","丙♡辛","丙♡壬","丙♡癸","丁♡甲","丁♡乙","丁♡丙","丁♡丁","丁♡戊","丁♡己","丁♡庚","丁♡辛","丁♡壬","丁♡癸","戊♡甲","戊♡乙","戊♡丙","戊♡丁","戊♡戊","戊♡己","戊♡庚","戊♡辛","戊♡壬","戊♡癸","己♡甲","己♡乙","己♡丙","己♡丁","己♡戊","己♡己","己♡庚","己♡辛","己♡壬","己♡癸","庚♡甲","庚♡乙","庚♡丙","庚♡丁","庚♡戊","庚♡己","庚♡庚","庚♡辛","庚♡壬","庚♡癸","辛♡甲","辛♡乙","辛♡丙","辛♡丁","辛♡戊","辛♡己","辛♡庚","辛♡辛","辛♡壬","辛♡癸","壬♡甲","壬♡乙","壬♡丙","壬♡丁","壬♡戊","壬♡己","壬♡庚","壬♡辛","壬♡壬","壬♡癸","癸♡甲","癸♡乙","癸♡丙","癸♡丁","癸♡戊","癸♡己","癸♡庚","癸♡辛","癸♡壬","癸♡癸"];
+
+function getColors(n) {
+  if (n <= 10) return { bg:"#2B5D34", tx:"#0CDD08", num:"#ffffff" };
+  if (n <= 20) return { bg:"#0CDD08", tx:"#2B5D34", num:"#2B5D34" };
+  if (n <= 30) return { bg:"#c10000", tx:"#fc6a03", num:"#ffffff" };
+  if (n <= 40) return { bg:"#fc6a03", tx:"#c10000", num:"#ffffff" };
+  if (n <= 50) return { bg:"#FFE302", tx:"#CA853C", num:"#ffffff" };
+  if (n <= 60) return { bg:"#CA853C", tx:"#FFE302", num:"#ffffff" };
+  if (n <= 70) return { bg:"#ffffff", tx:"#999999", num:"#999999" };
+  if (n <= 80) return { bg:"#999999", tx:"#ffffff", num:"#ffffff" };
+  if (n <= 90) return { bg:"#00BFFF", tx:"#000073", num:"#000073" };
+  return { bg:"#000073", tx:"#00BFFF", num:"#00BFFF" };
+}
+
+// ── Screen navigation ─────────────────────────
+let currentScreen = 'home';
+function goTo(id) {
+  document.getElementById(currentScreen).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  currentScreen = id;
+  window.scrollTo(0, 0);
+  if (id === 'find2hs') document.getElementById('idInput').focus();
+}
+
+// ── Find 2Hs ─────────────────────────────────
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmnYT5qOfOBuGtzwwbS0a3gXSMY0QEb6sq529JTGbxipl7NOUNGywgmV2S09uK1CnG/exec";
+let clientGroups = {};
+
+async function init() {
+  try {
+    const res = await fetch(SCRIPT_URL);
+    clientGroups = await res.json();
+    document.getElementById('idInput').placeholder = "TYPE HERE";
+    document.getElementById('idInput').disabled = false;
+  } catch(e) {
+    document.getElementById('idInput').placeholder = "ERROR LOADING";
+  }
+}
+
+function find2Hs() {
+  const val = document.getElementById('idInput').value.toUpperCase().trim();
+  const btnR = document.getElementById('btnRan'), btnY = document.getElementById('btnYuri');
+  const lbl = document.getElementById('labelPortal'), err = document.getElementById('noResult');
+  const lblR = document.getElementById('labelRan'), lblY = document.getElementById('labelYuri');
+  const hide = el => el.style.display = 'none';
+  const show = (el, d='block') => el.style.display = d;
+
+  if (!val) { [btnR,btnY,lbl,err,lblR,lblY].forEach(hide); return; }
+
+  const entry = Object.entries(clientGroups).find(([_,codes]) => codes.some(c => c.toUpperCase() === val));
+  if (entry) {
+    const n = parseInt(entry[0]), c = getColors(n);
+    hide(err); show(lbl); show(lblR); show(lblY);
+    [btnR, btnY].forEach((btn, i) => {
+      show(btn, 'flex');
+      btn.style.backgroundColor = c.bg; btn.style.color = c.tx;
+      btn.href = (i===0 ? "https://sites.google.com/view/BaziiiRan" : "https://sites.google.com/view/BaziiiiYuri") + String(n).padStart(3,'0');
+      const numEl = btn.querySelector('.result-num'); numEl.textContent = n; numEl.style.color = c.num;
+      btn.querySelector('.result-label').textContent = labels[n-1];
+    });
+  } else {
+    [btnR,btnY,lbl,lblR,lblY].forEach(hide); show(err);
+  }
+}
+
+// ── Build Quick Search grid ───────────────────
+function buildQS() {
+  const grid = document.getElementById('qsGrid');
+  if (grid.children.length) return;
+  labels.forEach((label, i) => {
+    const n = i + 1, c = getColors(n);
+    const el = document.createElement('div');
+    el.className = 'qs-item';
+    el.style.backgroundColor = c.bg; el.style.color = c.tx;
+    el.innerHTML = `<div class="qs-num" style="color:${c.num}">${n}</div><div class="qs-label">${label}</div>`;
+    el.onclick = () => openDetail(n, 'quicksearch');
+    grid.appendChild(el);
+  });
+}
+
+// ── Build Directory grid ──────────────────────
+function buildDir() {
+  const grid = document.getElementById('dirGrid');
+  if (grid.children.length) return;
+  labels.forEach((label, i) => {
+    const n = i + 1, c = getColors(n);
+    const el = document.createElement('a');
+    el.className = 'dir-item';
+    el.style.backgroundColor = c.bg; el.style.color = c.tx;
+    el.href = "https://sites.google.com/view/BaziiiRan" + String(n).padStart(3,'0');
+    el.target = '_blank';
+    el.innerHTML = `<div class="dir-num" style="color:${c.num}">${n}</div><div class="dir-label">${label}</div>`;
+    grid.appendChild(el);
+  });
+}
+
+// ── Detail screen ─────────────────────────────
+function openDetail(n, from) {
+  const c = getColors(n), padded = String(n).padStart(3,'0');
+  const hero = document.getElementById('detailHero');
+  hero.style.backgroundColor = c.bg; hero.style.color = c.tx;
+  document.getElementById('detailNum').textContent = n; document.getElementById('detailNum').style.color = c.num;
+  document.getElementById('detailLabel').textContent = labels[n-1];
+  document.getElementById('detailRan').href = "https://sites.google.com/view/BaziiiRan" + padded;
+  document.getElementById('detailYuri').href = "https://sites.google.com/view/BaziiiiYuri" + padded;
+  document.getElementById('detailBack').onclick = () => goTo(from);
+  document.getElementById(currentScreen).classList.remove('active');
+  document.getElementById('detail').classList.add('active');
+  currentScreen = 'detail';
+  window.scrollTo(0,0);
+}
+
+// ── Init on load ──────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  init();
+  buildQS();
+  buildDir();
+});
+</script>
+</body>
+</html>
