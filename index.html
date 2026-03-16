@@ -15,7 +15,523 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root { --navy:#000073; --sky:#00BFFF; --white:#ffffff; --dim:rgba(255,255,255,0.12); }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000073">
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="apple-touch-icon" href="icon.png">
+<title>2Hs Portal</title>
+<meta property="og:title" content="2Hs Portal">
+<meta property="og:description" content="Find your 2Hs — enter your date of birth to discover your Bazi chart.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#000073; --sky:#00BFFF; --white:#ffffff; --dim:rgba(255,255,255,0.12); }
   * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  body { font-family:'Crimson Pro',Georgia,serif; background:var(--navy); color:var(--white); min-height:100dvh; overflow-x:hidden; }
+
+  .screen { display:none; min-height:100dvh; flex-direction:column; align-items:center; padding:0 20px 40px; }
+  .screen.active { display:flex; }
+
+  /* HOME */
+  #home { justify-content:center; background:radial-gradient(ellipse at 50% 30%,rgba(0,191,255,0.12) 0%,transparent 65%),linear-gradient(180deg,#000073 0%,#00004a 100%); }
+  .site-names { display:flex; flex-direction:column; align-items:center; gap:6px; margin-bottom:24px; }
+  .site-name { font-family:'Cinzel',serif; font-size:13px; letter-spacing:0.2em; color:rgba(255,255,255,0.4); }
+  .logo-wrap { display:flex; flex-direction:column; align-items:center; margin-bottom:36px; }
+  .logo-wrap img { width:80px; height:80px; object-fit:contain; margin-bottom:14px; filter:drop-shadow(0 0 18px rgba(0,191,255,0.5)); }
+  .logo-title { font-family:'Cinzel',serif; font-size:22px; letter-spacing:0.2em; color:var(--sky); font-weight:600; }
+  .home-question { font-family:'Cinzel',serif; font-size:14px; letter-spacing:0.18em; color:rgba(255,255,255,0.7); margin-bottom:40px; text-align:center; }
+  .home-cards { width:100%; max-width:400px; display:flex; flex-direction:column; gap:14px; }
+  .home-card { background:var(--dim); border:1px solid rgba(0,191,255,0.25); border-radius:16px; padding:22px 24px; display:flex; align-items:center; gap:18px; cursor:pointer; transition:background 0.25s,border-color 0.25s,transform 0.2s; -webkit-user-select:none; }
+  .home-card:active { transform:scale(0.97); background:rgba(0,191,255,0.12); border-color:var(--sky); }
+  .card-icon { font-size:34px; flex-shrink:0; width:48px; text-align:center; }
+  .card-icon img { width:40px; height:40px; object-fit:contain; pointer-events:none; display:block; }
+  .card-text { flex:1; }
+  .card-title { font-family:'Cinzel',serif; font-size:15px; font-weight:600; letter-spacing:0.08em; color:var(--sky); margin-bottom:3px; }
+  .card-desc { font-size:13px; color:rgba(255,255,255,0.5); }
+  .card-arrow { color:var(--sky); font-size:20px; }
+
+  /* INNER SCREENS */
+  .inner-header { width:100%; max-width:520px; display:flex; align-items:center; gap:12px; padding:20px 0 16px; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:28px; flex-shrink:0; }
+  .back-btn { background:none; border:none; color:var(--sky); font-size:26px; cursor:pointer; padding:4px 8px 4px 0; line-height:1; flex-shrink:0; }
+  .back-btn:active { opacity:0.5; }
+  .inner-title { font-family:'Cinzel',serif; font-size:14px; letter-spacing:0.15em; color:rgba(255,255,255,0.7); }
+
+  /* FIND 2Hs */
+  #find2hs { padding-top:0; overflow-y:auto; background:radial-gradient(ellipse at 50% 0%,rgba(0,191,255,0.08) 0%,transparent 60%),linear-gradient(180deg,#000073 0%,#00004a 100%); }
+  #find2hs .inner-header { margin-top:20px; }
+  .dob-form { width:100%; max-width:480px; }
+  .field-label { font-size:13px; letter-spacing:0.12em; color:rgba(255,255,255,0.45); text-transform:uppercase; margin-bottom:8px; display:block; margin-top:20px; }
+  .field-note { font-size:12px; color:rgba(255,255,255,0.3); margin-bottom:14px; font-style:italic; }
+  .dob-row { display:grid; grid-template-columns:1fr 1fr 1.4fr; gap:10px; margin-bottom:20px; }
+  .dob-select { width:100%; height:54px; border-radius:10px; border:2px solid rgba(0,191,255,0.3); background:rgba(0,0,0,0.35); color:var(--white); font-size:13px; padding:0 12px; -webkit-appearance:none; appearance:none; outline:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%2300BFFF' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; }
+  .dob-select option { background:#000073; color:#fff; }
+  .time-select-wrap { margin-bottom:24px; }
+  .generate-btn { width:75%; height:56px; border-radius:12px; border:none; background:var(--sky); color:var(--navy); font-family:'Cinzel',serif; font-size:16px; font-weight:700; letter-spacing:0.1em; cursor:pointer; transition:opacity 0.2s; margin-bottom:10px; display:block; margin-left:auto; margin-right:auto; }
+  .generate-btn:active { opacity:0.7; }
+  .generate-btn:disabled { opacity:0.35; cursor:not-allowed; }
+  .dob-error { color:#ff8a80; font-size:13px; text-align:center; display:none; margin-bottom:12px; }
+  .dob-result { display:none; margin-top:28px; padding-top:28px; border-top:1px solid var(--dim); flex-direction:column; align-items:center; }
+  .result-meta-text { font-size:13px; color:rgba(255,255,255,0.4); text-align:center; margin-bottom:20px; }
+  .pillars-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:24px; width:100%; }
+  .pillar-box { background:rgba(255,255,255,0.05); border-radius:12px; padding:12px 6px; text-align:center; border:1px solid rgba(255,255,255,0.1); }
+  .pillar-header { font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:8px; letter-spacing:0.05em; }
+  .pillar-char { font-size:32px; font-weight:700; line-height:1; margin-bottom:8px; }
+  .pillar-viet { font-size:11px; color:rgba(255,255,255,0.5); font-style:italic; }
+  .hl { color:#FFD700; }
+  .hs-result-label { font-family:'Cinzel',serif; font-size:14px; letter-spacing:0.15em; color:#ffffff; text-transform:uppercase; text-align:center; margin-top:40px; margin-bottom:8px; }
+  .hs-btn-hint { font-size:11px; color:rgba(255,255,255,0.35); text-align:center; margin-top:8px; display:block; }
+
+  /* UNIFIED 2Hs BUTTON */
+  .hs-btn { border-radius:14px; padding:16px 20px; text-decoration:none; color:inherit; display:flex; flex-direction:row; align-items:center; justify-content:center; gap:14px; transition:transform 0.2s,box-shadow 0.2s; border:1px solid rgba(255,255,255,0.1); width:fit-content; min-width:280px; box-sizing:border-box; }
+  .hs-btn:hover { transform:scale(1.04); box-shadow:0 0 50px rgba(255,255,255,0.6); }
+  .hs-btn:active { transform:scale(0.97); }
+  .hs-btn-orchid { width:70px; height:70px; object-fit:contain; flex-shrink:0; }
+  .hs-btn-body { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .hs-btn-num { font-family:'Cinzel',serif; font-size:13px; font-weight:600; opacity:0.7; margin-bottom:4px; text-align:center; }
+  .hs-btn-char { font-size:52px; font-weight:700; line-height:1; text-align:center; }
+
+  /* START OVER */
+  .start-over-btn { margin-top:32px; width:75%; padding:14px; border-radius:10px; border:1px solid rgba(0,191,255,0.3); background:transparent; color:rgba(255,255,255,0.4); font-family:'Cinzel',serif; font-size:12px; letter-spacing:0.15em; cursor:pointer; display:block; margin-left:auto; margin-right:auto; }
+
+  /* DIRECTORY */
+  #directory { padding-top:0; overflow-y:auto; }
+  #directory .inner-header { margin-top:20px; }
+  #dir-ran, #dir-yuri { padding-top:0; overflow-y:auto; }
+  #dir-ran .inner-header, #dir-yuri .inner-header { margin-top:20px; }
+  .dir-grid { width:100%; max-width:520px; display:flex; flex-direction:column; gap:16px; padding-bottom:20px; }
+
+  /* QUICK SEARCH */
+  #quicksearch { padding-top:0; overflow-y:auto; background:radial-gradient(ellipse at 50% 0%,rgba(0,191,255,0.08) 0%,transparent 60%),linear-gradient(180deg,#000073 0%,#00004a 100%); }
+  #quicksearch .inner-header { margin-top:20px; }
+  .qs-field { width:100%; max-width:480px; }
+
+  /* DETAIL */
+  #detail { padding-top:0; background:radial-gradient(ellipse at 50% 0%,rgba(0,191,255,0.08) 0%,transparent 60%),linear-gradient(180deg,#000073 0%,#00004a 100%); }
+  #detail .inner-header { margin-top:20px; }
+  .detail-hero { width:100%; max-width:340px; border-radius:20px; padding:32px 24px; text-align:center; border:1px solid rgba(255,255,255,0.15); margin-bottom:28px; }
+  .detail-num { font-family:'Cinzel',serif; font-size:52px; font-weight:700; margin-bottom:8px; }
+  .detail-label { font-size:30px; }
+  .detail-links { width:100%; max-width:520px; display:flex; flex-direction:column; gap:16px; align-items:center; }
+
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp   { from{opacity:0;transform:translateY(16px)}  to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="site-names">
+    <div class="site-name">Bazi (ii) Ran</div>
+    <div class="site-name">Bazi (iii) Yuri</div>
+  </div>
+  <div class="logo-wrap">
+    <img src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png" alt="Orchid">
+    <div class="logo-title">2Hs PORTAL</div>
+  </div>
+  <div class="home-question">What do you want to do?</div>
+  <div class="home-cards">
+    <div class="home-card" onclick="goTo('quicksearch')">
+      <div class="card-icon">⚡</div>
+      <div class="card-text">
+        <div class="card-title">To Quickly Locate Your 2Hs</div>
+        <div class="card-desc">Key in your ID code to locate your 2Hs</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="home-card" onclick="goTo('find2hs')">
+      <div class="card-icon">🔍</div>
+      <div class="card-text">
+        <div class="card-title">To Find Your 2Hs</div>
+        <div class="card-desc">Key in your DOB to find out your 2Hs</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="home-card" onclick="goTo('directory')">
+      <div class="card-icon">📁</div>
+      <div class="card-text">
+        <div class="card-title">Directory</div>
+        <div class="card-desc">Full directory of all 100 2Hs</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+  </div>
+</div>
+
+<!-- FIND 2Hs DOB Calculator -->
+<div id="find2hs" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" onclick="goTo('home')">‹</button>
+    <div class="inner-title">TO FIND YOUR 2Hs</div>
+  </div>
+  <div class="dob-form">
+    <div style="text-align:center;margin-bottom:20px;">
+      <img src="https://i.postimg.cc/FzQ4jMVB/orchid-nobg.png" style="width:70px;height:70px;object-fit:contain;">
+    </div>
+    <span class="field-label">📅 Date of birth</span>
+    <div class="field-note">Use your Gregorian (solar) date — do not use the lunar calendar.</div>
+    <div class="dob-row">
+      <select id="dob-day" class="dob-select">
+        <option value="">Day</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+        <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        <option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+        <option>16</option><option>17</option><option>18</option><option>19</option><option>20</option>
+        <option>21</option><option>22</option><option>23</option><option>24</option><option>25</option>
+        <option>26</option><option>27</option><option>28</option><option>29</option><option>30</option>
+        <option>31</option>
+      </select>
+      <select id="dob-month" class="dob-select">
+        <option value="">Month</option>
+        <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+        <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+        <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+        <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+      </select>
+      <select id="dob-year" class="dob-select"><option value="">Year</option></select>
+    </div>
+    <span class="field-label">🕐 Hour of birth</span>
+    <div class="time-select-wrap">
+      <select id="dob-time" class="dob-select" style="width:100%;">
+        <option value="">Select hour</option>
+        <option value="00:30">00:00 – 01:00 — 🐭 子 (Rat, Tí)</option>
+        <option value="02:00">01:00 – 03:00 — 🐂 丑 (Ox, Sửu)</option>
+        <option value="04:00">03:00 – 05:00 — 🐅 寅 (Tiger, Dần)</option>
+        <option value="06:00">05:00 – 07:00 — 🐇 卯 (Rabbit, Mão)</option>
+        <option value="08:00">07:00 – 09:00 — 🐉 辰 (Dragon, Thìn)</option>
+        <option value="10:00">09:00 – 11:00 — 🐍 巳 (Snake, Tị)</option>
+        <option value="12:00">11:00 – 13:00 — 🐴 午 (Horse, Ngọ)</option>
+        <option value="14:00">13:00 – 15:00 — 🐏 未 (Goat, Mùi)</option>
+        <option value="16:00">15:00 – 17:00 — 🐵 申 (Monkey, Thân)</option>
+        <option value="18:00">17:00 – 19:00 — 🐓 酉 (Rooster, Dậu)</option>
+        <option value="20:00">19:00 – 21:00 — 🐕 戌 (Dog, Tuất)</option>
+        <option value="22:00">21:00 – 23:00 — 🐖 亥 (Pig, Hợi)</option>
+        <option value="23:30">23:00 – 24:00 — 🐭 子 (Rat, Tí)</option>
+      </select>
+    </div>
+    <button id="genBtn" class="generate-btn" onclick="calculateDOB()">Generate</button>
+    <div id="dobError" class="dob-error">Please fill in all fields.</div>
+    <div id="dobResult" class="dob-result">
+      <div style="text-align:center;margin-bottom:12px;">
+        <img src="https://i.postimg.cc/NFYbC6bQ/Whats-App-Image-2026-03-15-at-22-43-23.png" style="width:80px;height:80px;object-fit:contain;">
+      </div>
+      <div id="dobMeta" class="result-meta-text"></div>
+      <div style="font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.15em;color:#ffffff;text-transform:uppercase;text-align:center;margin-top:40px;margin-bottom:40px;">Your Bazi:</div>
+      <div class="pillars-grid">
+        <div class="pillar-box"><div class="pillar-header">年 Year</div><div class="pillar-char" id="rYear"></div><div class="pillar-viet" id="vYear"></div></div>
+        <div class="pillar-box"><div class="pillar-header">月 Month</div><div class="pillar-char" id="rMonth"></div><div class="pillar-viet" id="vMonth"></div></div>
+        <div class="pillar-box"><div class="pillar-header">日 Day</div><div class="pillar-char" id="rDay"></div><div class="pillar-viet" id="vDay"></div></div>
+        <div class="pillar-box"><div class="pillar-header">時 Hour</div><div class="pillar-char" id="rHour"></div><div class="pillar-viet" id="vHour"></div></div>
+      </div>
+      <div class="hs-result-label">Your 2Hs ↓</div>
+      <div style="font-size:12px;color:#ff0000;text-align:center;margin-top:7px;margin-bottom:28px;">⚠️ Accessing any of the 100 2Hs sites—except No. 3 (free demo)—requires a prior subscription; otherwise, clicking any button will return a 404 error.</div>
+      <a id="hsCardRan" class="hs-btn" target="_blank">
+        <img class="hs-btn-orchid" src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png">
+        <div class="hs-btn-body"><div class="hs-btn-num" id="hsNumRan"></div><div class="hs-btn-char" id="hsCharRan"></div></div>
+      </a>
+      <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+      <a id="hsCardYuri" class="hs-btn" target="_blank" style="margin-top:12px;">
+        <img class="hs-btn-orchid" src="https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png">
+        <div class="hs-btn-body"><div class="hs-btn-num" id="hsNumYuri"></div><div class="hs-btn-char" id="hsCharYuri"></div></div>
+      </a>
+      <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+      <button class="start-over-btn" onclick="resetDOB()">↺ &nbsp;START OVER</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK SEARCH -->
+<div id="quicksearch" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" onclick="goTo('home')">‹</button>
+    <div class="inner-title">TO QUICKLY LOCATE YOUR 2Hs</div>
+  </div>
+  <div class="qs-field">
+    <div style="text-align:center;margin-bottom:40px;">
+      <img src="https://i.postimg.cc/NFYbC6bQ/Whats-App-Image-2026-03-15-at-22-43-23.png" style="width:70px;height:70px;object-fit:contain;">
+    </div>
+    <span class="field-label">Enter your ID code</span>
+    <input type="text" id="idInput" style="width:100%;padding:18px 20px;font-size:22px;font-family:'Cinzel',serif;letter-spacing:0.15em;border-radius:12px;border:2px solid rgba(0,191,255,0.4);background:rgba(0,0,0,0.3);color:#fff;text-align:center;text-transform:uppercase;outline:none;-webkit-appearance:none;margin-bottom:20px;" placeholder="TYPE HERE" autocomplete="off" autocorrect="off" spellcheck="false" oninput="findByID()">
+    <div id="idNoResult" style="color:#ff8a80;text-align:center;font-size:14px;display:none;margin-bottom:12px;">✕ &nbsp;ID CODE NOT FOUND</div>
+    <div id="idResultWrap" style="display:none;flex-direction:column;align-items:center;gap:12px;">
+      <div style="text-align:center;margin-top:50px;margin-bottom:8px;">
+        <img src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png" style="width:60px;height:60px;object-fit:contain;filter:drop-shadow(0 0 18px rgba(0,191,255,0.5));">
+      </div>
+      <div style="font-size:12px;color:#ff0000;text-align:center;margin-top:28px;margin-bottom:28px;">⚠️ Accessing any of the 100 2Hs sites—except No. 3 (free demo)—requires a prior subscription; otherwise, clicking any button will return a 404 error.</div>
+      <a id="idBtnRan" class="hs-btn" target="_blank">
+        <img class="hs-btn-orchid" src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png">
+        <div class="hs-btn-body"><div class="hs-btn-num" id="idNumRan"></div><div class="hs-btn-char" id="idLblRan"></div></div>
+      </a>
+      <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+      <a id="idBtnYuri" class="hs-btn" target="_blank" style="margin-top:12px;">
+        <img class="hs-btn-orchid" src="https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png">
+        <div class="hs-btn-body"><div class="hs-btn-num" id="idNumYuri"></div><div class="hs-btn-char" id="idLblYuri"></div></div>
+      </a>
+      <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+      <button class="start-over-btn" onclick="resetID()">↺ &nbsp;START OVER</button>
+    </div>
+  </div>
+</div>
+
+<!-- DIRECTORY LANDING -->
+<div id="directory" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" onclick="goTo('home')">‹</button>
+    <div class="inner-title">DIRECTORY</div>
+  </div>
+  <div style="text-align:center;margin-bottom:32px;">
+    <img src="https://i.postimg.cc/NFYbC6bQ/Whats-App-Image-2026-03-15-at-22-43-23.png" style="width:70px;height:70px;object-fit:contain;">
+  </div>
+  <div style="font-size:12px;color:#ff0000;text-align:center;margin-top:0;margin-bottom:28px;width:100%;max-width:400px;">⚠️ Accessing any of the 100 2Hs sites—except No. 3 (free demo)—requires a prior subscription; otherwise, clicking any button will return a 404 error.</div>
+  <div style="width:100%;max-width:400px;display:flex;flex-direction:column;gap:16px;">
+    <div class="home-card" onclick="goTo('dir-ran')">
+      <div class="card-icon"><img src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png"></div>
+      <div class="card-text">
+        <div class="card-title">Bazi (ii) Ran — 100 2Hs</div>
+        <div class="card-desc">Browse all 100 Bazi (ii) Ran's 2Hs</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="home-card" onclick="goTo('dir-yuri')">
+      <div class="card-icon"><img src="https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png"></div>
+      <div class="card-text">
+        <div class="card-title">Bazi (iii) Yuri — 100 2Hs</div>
+        <div class="card-desc">Browse all 100 Bazi (iii) Yuri's 2Hs</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+  </div>
+</div>
+
+<!-- DIRECTORY RAN -->
+<div id="dir-ran" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" onclick="goTo('directory')">‹</button>
+    <div class="inner-title">BAZI (II) RAN — 100 2Hs</div>
+  </div>
+  <input type="number" min="1" max="100" placeholder="Filter by number..." oninput="filterDir('dirGridRan',this.value)" style="width:100%;max-width:520px;padding:14px 18px;font-size:16px;font-family:'Cinzel',serif;border-radius:10px;border:2px solid rgba(0,191,255,0.3);background:rgba(0,0,0,0.3);color:#fff;outline:none;margin-bottom:20px;-webkit-appearance:none;">
+  <div class="dir-grid" id="dirGridRan"></div>
+</div>
+
+<!-- DIRECTORY YURI -->
+<div id="dir-yuri" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" onclick="goTo('directory')">‹</button>
+    <div class="inner-title">BAZI (III) YURI — 100 2Hs</div>
+  </div>
+  <input type="number" min="1" max="100" placeholder="Filter by number..." oninput="filterDir('dirGridYuri',this.value)" style="width:100%;max-width:520px;padding:14px 18px;font-size:16px;font-family:'Cinzel',serif;border-radius:10px;border:2px solid rgba(0,191,255,0.3);background:rgba(0,0,0,0.3);color:#fff;outline:none;margin-bottom:20px;-webkit-appearance:none;">
+  <div class="dir-grid" id="dirGridYuri"></div>
+</div>
+
+<!-- DETAIL -->
+<div id="detail" class="screen">
+  <div class="inner-header">
+    <button class="back-btn" id="detailBack" onclick="goTo('directory')">‹</button>
+    <div class="inner-title" id="detailTitle">CHART DETAIL</div>
+  </div>
+  <div class="detail-hero" id="detailHero">
+    <div class="detail-num" id="detailNum"></div>
+    <div class="detail-label" id="detailLabel"></div>
+  </div>
+  <div class="detail-links">
+    <div style="font-size:12px;color:#ff0000;text-align:center;margin-top:28px;margin-bottom:28px;">⚠️ Accessing any of the 100 2Hs sites—except No. 3 (free demo)—requires a prior subscription; otherwise, clicking any button will return a 404 error.</div>
+    <a class="hs-btn" id="detailRan" target="_blank">
+      <img class="hs-btn-orchid" src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png">
+      <div class="hs-btn-body"><div class="hs-btn-num" id="detailNumRan"></div><div class="hs-btn-char" id="detailLblRan"></div></div>
+    </a>
+    <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+    <a class="hs-btn" id="detailYuri" target="_blank" style="margin-top:12px;">
+      <img class="hs-btn-orchid" src="https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png">
+      <div class="hs-btn-body"><div class="hs-btn-num" id="detailNumYuri"></div><div class="hs-btn-char" id="detailLblYuri"></div></div>
+    </a>
+    <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+  </div>
+</div>
+
+<script>
+const BLUE_ORCHID = "https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png";
+const YURI_ORCHID = "https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png";
+const BAZI_SCRIPT = "https://script.google.com/macros/s/AKfycbyvHebXLnz626zBeW_9Jt4FfBk49wr327apmgCiicJF0Qa0LlhVyBfJgR1Bd8jKyZ1ddA/exec";
+const ID_SCRIPT   = "https://script.google.com/macros/s/AKfycbwmnYT5qOfOBuGtzwwbS0a3gXSMY0QEb6sq529JTGbxipl7NOUNGywgmV2S09uK1CnG/exec";
+
+const labels = ["甲 甲","甲 乙","甲 丙","甲 丁","甲 戊","甲 己","甲 庚","甲 辛","甲 壬","甲 癸","乙 甲","乙 乙","乙 丙","乙 丁","乙 戊","乙 己","乙 庚","乙 辛","乙 壬","乙 癸","丙 甲","丙 乙","丙 丙","丙 丁","丙 戊","丙 己","丙 庚","丙 辛","丙 壬","丙 癸","丁 甲","丁 乙","丁 丙","丁 丁","丁 戊","丁 己","丁 庚","丁 辛","丁 壬","丁 癸","戊 甲","戊 乙","戊 丙","戊 丁","戊 戊","戊 己","戊 庚","戊 辛","戊 壬","戊 癸","己 甲","己 乙","己 丙","己 丁","己 戊","己 己","己 庚","己 辛","己 壬","己 癸","庚 甲","庚 乙","庚 丙","庚 丁","庚 戊","庚 己","庚 庚","庚 辛","庚 壬","庚 癸","辛 甲","辛 乙","辛 丙","辛 丁","辛 戊","辛 己","辛 庚","辛 辛","辛 壬","辛 癸","壬 甲","壬 乙","壬 丙","壬 丁","壬 戊","壬 己","壬 庚","壬 辛","壬 壬","壬 癸","癸 甲","癸 乙","癸 丙","癸 丁","癸 戊","癸 己","癸 庚","癸 辛","癸 壬","癸 癸"];
+
+function getColors(n) {
+  if (n <= 10) return {bg:"#2B5D34",tx:"#0CDD08",num:"#ffffff"};
+  if (n <= 20) return {bg:"#0CDD08",tx:"#2B5D34",num:"#2B5D34"};
+  if (n <= 30) return {bg:"#c10000",tx:"#fc6a03",num:"#ffffff"};
+  if (n <= 40) return {bg:"#fc6a03",tx:"#c10000",num:"#ffffff"};
+  if (n <= 50) return {bg:"#FFE302",tx:"#CA853C",num:"#ffffff"};
+  if (n <= 60) return {bg:"#CA853C",tx:"#FFE302",num:"#ffffff"};
+  if (n <= 70) return {bg:"#ffffff",tx:"#999999",num:"#999999"};
+  if (n <= 80) return {bg:"#999999",tx:"#ffffff",num:"#ffffff"};
+  if (n <= 90) return {bg:"#00BFFF",tx:"#0000cc",num:"#0000cc"};
+  return {bg:"#0000cc",tx:"#00BFFF",num:"#00BFFF"};
+}
+
+var currentScreen = 'home';
+function goTo(id) {
+  // Clear filter fields when leaving dir screens
+  if (currentScreen === 'dir-ran') { const el = document.querySelector('#dir-ran input'); if(el){el.value=''; filterDir('dirGridRan','');} }
+  if (currentScreen === 'dir-yuri') { const el = document.querySelector('#dir-yuri input'); if(el){el.value=''; filterDir('dirGridYuri','');} }
+  document.getElementById(currentScreen).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  currentScreen = id;
+  window.scrollTo(0,0);
+}
+
+function resetDOB() {
+  document.getElementById('dob-day').value='';
+  document.getElementById('dob-month').value='';
+  document.getElementById('dob-year').value='';
+  document.getElementById('dob-time').value='';
+  document.getElementById('dobResult').style.display='none';
+  document.getElementById('dobError').style.display='none';
+  document.getElementById('genBtn').disabled=false;
+  document.getElementById('genBtn').textContent='Generate';
+}
+
+function resetID() {
+  document.getElementById('idInput').value='';
+  document.getElementById('idResultWrap').style.display='none';
+  document.getElementById('idNoResult').style.display='none';
+}
+
+const STEMS   = {'甲':'Giáp','乙':'Ất','丙':'Bính','丁':'Đinh','戊':'Mậu','己':'Kỉ','庚':'Canh','辛':'Tân','壬':'Nhâm','癸':'Quí'};
+const BRANCHES= {'子':'Tí','丑':'Sửu','寅':'Dần','卯':'Mão','辰':'Thìn','巳':'Tị','午':'Ngọ','未':'Mùi','申':'Thân','酉':'Dậu','戌':'Tuất','亥':'Hợi'};
+const MON_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function toViet(t) { if(!t||t.length<2) return ''; return (STEMS[t[0]]||BRANCHES[t[0]]||t[0])+' '+(BRANCHES[t[1]]||STEMS[t[1]]||t[1]); }
+function hlFirst(t,hl) { if(!t) return t; if(hl) return '<span class="hl">'+t[0]+'</span>'+t.slice(1); return t; }
+function ordinal(d) { const s=['th','st','nd','rd'],v=d%100; return d+(s[(v-20)%10]||s[v]||s[0]); }
+
+function calculateDOB() {
+  const day=document.getElementById('dob-day').value, month=document.getElementById('dob-month').value;
+  const year=document.getElementById('dob-year').value, time=document.getElementById('dob-time').value;
+  const errEl=document.getElementById('dobError'), btn=document.getElementById('genBtn');
+  if(!day||!month||!year||!time){errEl.textContent='Please fill in all fields.';errEl.style.display='block';return;}
+  errEl.style.display='none'; btn.disabled=true; btn.textContent='Calculating...';
+  const timeOpt=document.getElementById('dob-time');
+  const timeText=timeOpt.options[timeOpt.selectedIndex].text;
+  const emojiMatch=timeText.match(/[\u{1F300}-\u{1F9FF}]/u);
+  const emoji=emojiMatch?emojiMatch[0]:'';
+  const cbName='baziCB_'+Date.now();
+  const script=document.createElement('script');
+  const url=BAZI_SCRIPT+'?day='+day+'&month='+month+'&year='+year+'&time='+encodeURIComponent(time)+'&callback='+cbName;
+  const timeout=setTimeout(()=>{cleanup();errEl.textContent='Error connecting. Please try again.';errEl.style.display='block';btn.disabled=false;btn.textContent='Generate';},15000);
+  function cleanup(){clearTimeout(timeout);delete window[cbName];if(script.parentNode)script.parentNode.removeChild(script);}
+  window[cbName]=function(data){
+    cleanup();
+    if(data.error==='busy'){
+      btn.textContent='Please wait — someone else beat you to it & is inquiring. Stay cool, you don\'t need to do anything. Retrying automatically in 2s.';
+      setTimeout(()=>calculateDOB(),2000);
+      return;
+    }
+    if(data.error){
+      errEl.textContent='Error connecting. Please try again.';
+      errEl.style.display='block';
+      btn.disabled=false; btn.textContent='Generate';
+      return;
+    }
+    document.getElementById('rYear').innerHTML=hlFirst(data.year,true);
+    document.getElementById('rMonth').innerHTML=hlFirst(data.month,false);
+    document.getElementById('rDay').innerHTML=hlFirst(data.day,false);
+    document.getElementById('rHour').innerHTML=hlFirst(data.hour,true);
+    document.getElementById('vYear').textContent=toViet(data.year);
+    document.getElementById('vMonth').textContent=toViet(data.month);
+    document.getElementById('vDay').textContent=toViet(data.day);
+    document.getElementById('vHour').textContent=toViet(data.hour);
+    document.getElementById('dobMeta').innerHTML='📅 '+MON_NAMES[parseInt(month)-1]+' '+ordinal(parseInt(day))+', '+year+'&emsp;'+emoji;
+    const n=parseInt(data.hsNum), c=getColors(n), padded=String(n).padStart(3,'0');
+    ['hsCardRan','hsCardYuri'].forEach((id,i)=>{
+      const btn=document.getElementById(id);
+      btn.style.backgroundColor=c.bg; btn.style.color=c.tx;
+      btn.href=(i===0?'https://sites.google.com/view/BaziiiRan':'https://sites.google.com/view/BaziiiiYuri')+padded;
+    });
+    document.getElementById('hsNumRan').textContent='No. '+n; document.getElementById('hsNumRan').style.color=c.num;
+    document.getElementById('hsCharRan').textContent=labels[n-1];
+    document.getElementById('hsNumYuri').textContent='No. '+n; document.getElementById('hsNumYuri').style.color=c.num;
+    document.getElementById('hsCharYuri').textContent=labels[n-1];
+    const res=document.getElementById('dobResult'); res.style.display='flex';
+    res.scrollIntoView({behavior:'smooth',block:'start'});
+    btn.disabled=false; btn.textContent='Generate';
+  };
+  script.onerror=function(){cleanup();errEl.textContent='Error connecting. Please try again.';errEl.style.display='block';btn.disabled=false;btn.textContent='Generate';};
+  script.src=url; document.head.appendChild(script);
+}
+
+var clientGroups={};
+async function loadClients() {
+  try { const res=await fetch(ID_SCRIPT); clientGroups=await res.json(); } catch(e){}
+}
+
+function findByID() {
+  const val=document.getElementById('idInput').value.toUpperCase().trim();
+  const wrap=document.getElementById('idResultWrap'), err=document.getElementById('idNoResult');
+  if(!val){wrap.style.display='none';err.style.display='none';return;}
+  const entry=Object.entries(clientGroups).find(([_,codes])=>codes.some(c=>c.toUpperCase()===val));
+  if(entry){
+    const n=parseInt(entry[0]),c=getColors(n),padded=String(n).padStart(3,'0');
+    err.style.display='none'; wrap.style.display='flex';
+    ['idBtnRan','idBtnYuri'].forEach((id,i)=>{
+      const btn=document.getElementById(id);
+      btn.style.backgroundColor=c.bg; btn.style.color=c.tx;
+      btn.href=(i===0?'https://sites.google.com/view/BaziiiRan':'https://sites.google.com/view/BaziiiiYuri')+padded;
+    });
+    document.getElementById('idNumRan').textContent='No. '+n; document.getElementById('idNumRan').style.color=c.num;
+    document.getElementById('idLblRan').textContent=labels[n-1];
+    document.getElementById('idNumYuri').textContent='No. '+n; document.getElementById('idNumYuri').style.color=c.num;
+    document.getElementById('idLblYuri').textContent=labels[n-1];
+  } else { wrap.style.display='none'; err.style.display='block'; }
+}
+
+function buildDirGrid(gridId, baseUrl, orchid) {
+  const grid=document.getElementById(gridId);
+  if(!grid||grid.children.length) return;
+  labels.forEach((label,i)=>{
+    const n=i+1, c=getColors(n);
+    const wrap=document.createElement('div');
+    wrap.style.cssText='display:flex;flex-direction:column;align-items:center;';
+    const el=document.createElement('a');
+    el.className='hs-btn';
+    el.style.backgroundColor=c.bg; el.style.color=c.tx;
+    el.href=baseUrl+String(n).padStart(3,'0');
+    el.target='_blank';
+    el.innerHTML='<img class="hs-btn-orchid" src="'+orchid+'"><div class="hs-btn-body"><div class="hs-btn-num" style="color:'+c.num+'">No. '+n+'</div><div class="hs-btn-char">'+label+'</div></div>';
+    const hint=document.createElement('span');
+    hint.className='hs-btn-hint'; hint.textContent='Tap to open the 2Hs site ↗';
+    wrap.appendChild(el); wrap.appendChild(hint); grid.appendChild(wrap);
+  });
+}
+
+function filterDir(gridId, val) {
+  const grid = document.getElementById(gridId);
+  const num = parseInt(val);
+  Array.from(grid.children).forEach((wrap, i) => {
+    wrap.style.display = (!val || (i+1) === num) ? 'flex' : 'none';
+  });
+}
+
+function populateYears() {
+  const sel=document.getElementById('dob-year');
+  for(let y=2026;y>=1920;y--){const o=document.createElement('option');o.value=o.textContent=y;sel.appendChild(o);}
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  populateYears();
+  loadClients();
+  buildDirGrid('dirGridRan','https://sites.google.com/view/BaziiiRan',BLUE_ORCHID);
+  buildDirGrid('dirGridYuri','https://sites.google.com/view/BaziiiiYuri',YURI_ORCHID);
+});
+</script>
+</body>
+</html>
   body { font-family:'Crimson Pro',Georgia,serif; background:var(--navy); color:var(--white); min-height:100dvh; overflow-x:hidden; }
 
   .screen { display:none; min-height:100dvh; flex-direction:column; align-items:center; padding:0 20px 40px; }
