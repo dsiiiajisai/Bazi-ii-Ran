@@ -67,7 +67,7 @@
   .pillar-char { font-size:32px; font-weight:700; line-height:1; margin-bottom:8px; }
   .pillar-viet { font-size:11px; color:rgba(255,255,255,0.5); font-style:italic; }
   .hl { color:#FFD700; }
-  .hs-result-label { font-size:12px; letter-spacing:0.12em; color:rgba(255,255,255,0.4); text-transform:uppercase; text-align:center; margin-bottom:14px; }
+  .hs-result-label { font-family:'Cinzel',serif; font-size:14px; letter-spacing:0.15em; color:#ffffff; text-transform:uppercase; text-align:center; margin-top:40px; margin-bottom:8px; }
   .hs-btn-hint { font-size:11px; color:rgba(255,255,255,0.35); text-align:center; margin-top:8px; display:block; }
 
   /* UNIFIED 2Hs BUTTON */
@@ -183,39 +183,37 @@
     <div class="time-select-wrap">
       <select id="dob-time" class="dob-select" style="width:100%;">
         <option value="">Select hour</option>
-        <option value="00:30">00:00 – 01:00 — 🐭 子 (Rat, Tý)</option>
+        <option value="00:30">00:00 – 01:00 — 🐭 子 (Rat, Tí)</option>
         <option value="02:00">01:00 – 03:00 — 🐂 丑 (Ox, Sửu)</option>
         <option value="04:00">03:00 – 05:00 — 🐅 寅 (Tiger, Dần)</option>
         <option value="06:00">05:00 – 07:00 — 🐇 卯 (Rabbit, Mão)</option>
         <option value="08:00">07:00 – 09:00 — 🐉 辰 (Dragon, Thìn)</option>
-        <option value="10:00">09:00 – 11:00 — 🐍 巳 (Snake, Tỵ)</option>
+        <option value="10:00">09:00 – 11:00 — 🐍 巳 (Snake, Tị)</option>
         <option value="12:00">11:00 – 13:00 — 🐴 午 (Horse, Ngọ)</option>
         <option value="14:00">13:00 – 15:00 — 🐏 未 (Goat, Mùi)</option>
         <option value="16:00">15:00 – 17:00 — 🐵 申 (Monkey, Thân)</option>
         <option value="18:00">17:00 – 19:00 — 🐓 酉 (Rooster, Dậu)</option>
         <option value="20:00">19:00 – 21:00 — 🐕 戌 (Dog, Tuất)</option>
         <option value="22:00">21:00 – 23:00 — 🐖 亥 (Pig, Hợi)</option>
-        <option value="23:30">23:00 – 24:00 — 🐭 子 (Rat, Tý)</option>
+        <option value="23:30">23:00 – 24:00 — 🐭 子 (Rat, Tí)</option>
       </select>
     </div>
     <button id="genBtn" class="generate-btn" onclick="calculateDOB()">Generate</button>
     <div id="dobError" class="dob-error">Please fill in all fields.</div>
     <div id="dobResult" class="dob-result">
-      <div id="dobMeta" class="result-meta-text"></div>
       <div style="text-align:center;margin-bottom:12px;">
-        <img src="https://i.postimg.cc/NFYbC6bQ/Whats-App-Image-2026-03-15-at-22-43-23.png" style="width:60px;height:60px;object-fit:contain;">
+        <img src="https://i.postimg.cc/NFYbC6bQ/Whats-App-Image-2026-03-15-at-22-43-23.png" style="width:80px;height:80px;object-fit:contain;">
       </div>
-      <div style="font-size:12px;letter-spacing:0.15em;color:rgba(255,255,255,0.4);text-transform:uppercase;text-align:center;margin-bottom:14px;">Your Bazi:</div>
+      <div id="dobMeta" class="result-meta-text"></div>
+      <div style="font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.15em;color:#ffffff;text-transform:uppercase;text-align:center;margin-top:40px;margin-bottom:40px;">Your Bazi:</div>
       <div class="pillars-grid">
         <div class="pillar-box"><div class="pillar-header">年 Year</div><div class="pillar-char" id="rYear"></div><div class="pillar-viet" id="vYear"></div></div>
         <div class="pillar-box"><div class="pillar-header">月 Month</div><div class="pillar-char" id="rMonth"></div><div class="pillar-viet" id="vMonth"></div></div>
         <div class="pillar-box"><div class="pillar-header">日 Day</div><div class="pillar-char" id="rDay"></div><div class="pillar-viet" id="vDay"></div></div>
         <div class="pillar-box"><div class="pillar-header">時 Hour</div><div class="pillar-char" id="rHour"></div><div class="pillar-viet" id="vHour"></div></div>
       </div>
-      <div style="text-align:center;margin:60px 0 8px;">
-        <img src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png" style="width:60px;height:60px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(0,191,255,0.5));">
-      </div>
       <div class="hs-result-label">Your 2Hs ↓</div>
+      <div style="font-size:12px;color:#ff0000;text-align:center;margin-top:7px;margin-bottom:28px;">⚠️ Accessing any of the 100 2Hs sites—except No. 3 (free demo)—requires a prior subscription; otherwise, clicking any button will return a 404 error.</div>
       <a id="hsCardRan" class="hs-btn" target="_blank">
         <img class="hs-btn-orchid" src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png">
         <div class="hs-btn-body"><div class="hs-btn-num" id="hsNumRan"></div><div class="hs-btn-char" id="hsCharRan"></div></div>
@@ -248,6 +246,7 @@
       <div style="text-align:center;margin-top:50px;margin-bottom:8px;">
         <img src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png" style="width:60px;height:60px;object-fit:contain;filter:drop-shadow(0 0 18px rgba(0,191,255,0.5));">
       </div>
+      <div style="font-size:12px;color:#ff0000;text-align:center;margin-top:28px;margin-bottom:28px;">⚠️ Accessing any of the 100 2Hs sites—except No. 3 (free demo)—requires a prior subscription; otherwise, clicking any button will return a 404 error.</div>
       <a id="idBtnRan" class="hs-btn" target="_blank">
         <img class="hs-btn-orchid" src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png">
         <div class="hs-btn-body"><div class="hs-btn-num" id="idNumRan"></div><div class="hs-btn-char" id="idLblRan"></div></div>
@@ -272,6 +271,7 @@
   <div style="text-align:center;margin-bottom:32px;">
     <img src="https://i.postimg.cc/NFYbC6bQ/Whats-App-Image-2026-03-15-at-22-43-23.png" style="width:70px;height:70px;object-fit:contain;">
   </div>
+  <div style="font-size:12px;color:#ff0000;text-align:center;margin-top:0;margin-bottom:28px;width:100%;max-width:400px;">⚠️ Accessing any of the 100 2Hs sites—except No. 3 (free demo)—requires a prior subscription; otherwise, clicking any button will return a 404 error.</div>
   <div style="width:100%;max-width:400px;display:flex;flex-direction:column;gap:16px;">
     <div class="home-card" onclick="goTo('dir-ran')">
       <div class="card-icon"><img src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png"></div>
@@ -323,6 +323,7 @@
     <div class="detail-label" id="detailLabel"></div>
   </div>
   <div class="detail-links">
+    <div style="font-size:12px;color:#ff0000;text-align:center;margin-top:28px;margin-bottom:28px;">⚠️ Accessing any of the 100 2Hs sites—except No. 3 (free demo)—requires a prior subscription; otherwise, clicking any button will return a 404 error.</div>
     <a class="hs-btn" id="detailRan" target="_blank">
       <img class="hs-btn-orchid" src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png">
       <div class="hs-btn-body"><div class="hs-btn-num" id="detailNumRan"></div><div class="hs-btn-char" id="detailLblRan"></div></div>
@@ -359,6 +360,9 @@ function getColors(n) {
 
 var currentScreen = 'home';
 function goTo(id) {
+  // Clear filter fields when leaving dir screens
+  if (currentScreen === 'dir-ran') { const el = document.querySelector('#dir-ran input'); if(el){el.value=''; filterDir('dirGridRan','');} }
+  if (currentScreen === 'dir-yuri') { const el = document.querySelector('#dir-yuri input'); if(el){el.value=''; filterDir('dirGridYuri','');} }
   document.getElementById(currentScreen).classList.remove('active');
   document.getElementById(id).classList.add('active');
   currentScreen = id;
@@ -383,7 +387,7 @@ function resetID() {
 }
 
 const STEMS   = {'甲':'Giáp','乙':'Ất','丙':'Bính','丁':'Đinh','戊':'Mậu','己':'Kỉ','庚':'Canh','辛':'Tân','壬':'Nhâm','癸':'Quí'};
-const BRANCHES= {'子':'Tý','丑':'Sửu','寅':'Dần','卯':'Mão','辰':'Thìn','巳':'Tỵ','午':'Ngọ','未':'Mùi','申':'Thân','酉':'Dậu','戌':'Tuất','亥':'Hợi'};
+const BRANCHES= {'子':'Tí','丑':'Sửu','寅':'Dần','卯':'Mão','辰':'Thìn','巳':'Tị','午':'Ngọ','未':'Mùi','申':'Thân','酉':'Dậu','戌':'Tuất','亥':'Hợi'};
 const MON_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function toViet(t) { if(!t||t.length<2) return ''; return (STEMS[t[0]]||BRANCHES[t[0]]||t[0])+' '+(BRANCHES[t[1]]||STEMS[t[1]]||t[1]); }
