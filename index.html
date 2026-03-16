@@ -90,6 +90,7 @@
   .home-card:active { transform: scale(0.97); background: rgba(0,191,255,0.12); border-color: var(--sky); }
 
   .card-icon { font-size: 34px; flex-shrink: 0; width: 48px; text-align: center; }
+  .card-icon img { pointer-events: none; }
   .card-text { flex: 1; }
   .card-title { font-family: 'Cinzel', serif; font-size: 15px; font-weight: 600; letter-spacing: 0.08em; color: var(--sky); margin-bottom: 3px; }
   .card-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
@@ -148,11 +149,11 @@
   .time-select-wrap { margin-bottom: 24px; }
 
   .generate-btn {
-    width: 100%; height: 56px; border-radius: 12px; border: none;
+    width: 75%; height: 56px; border-radius: 12px; border: none;
     background: var(--sky); color: var(--navy);
     font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700;
     letter-spacing: 0.1em; cursor: pointer; transition: opacity 0.2s;
-    margin-bottom: 10px;
+    margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;
   }
   .generate-btn:active { opacity: 0.7; }
   .generate-btn:disabled { opacity: 0.35; cursor: not-allowed; }
@@ -160,7 +161,7 @@
   .dob-error { color: #ff8a80; font-size: 13px; text-align: center; display: none; margin-bottom: 12px; }
 
   /* result area */
-  .dob-result { display: none; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--dim); }
+  .dob-result { display: none; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--dim); flex-direction: column; align-items: center; }
   .result-meta-text { font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 20px; }
   .pillars-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 24px; }
   .pillar-box { border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; text-align: center; overflow: hidden; }
@@ -182,14 +183,16 @@
   .hs-open-hint { display: none; text-align: center; font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 10px; }
 
   /* ─── DIRECTORY ─────────────────────────────── */
-  #directory { padding-top: 0; overflow-y: auto; }
+  #directory { padding-top: 0; overflow-y: auto; height: 100dvh; }
   #directory .inner-header { margin-top: 20px; }
+  #dir-ran, #dir-yuri { padding-top: 0; overflow-y: auto; height: 100dvh; }
+  #dir-ran .inner-header, #dir-yuri .inner-header { margin-top: 20px; }
 
   .dir-grid {
     width: 100%; max-width: 520px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     padding-bottom: 20px;
   }
 
@@ -261,7 +264,7 @@
   .detail-num { font-family: 'Cinzel', serif; font-size: 52px; font-weight: 700; margin-bottom: 8px; }
   .detail-label { font-size: 30px; margin-bottom: 0; }
 
-  .detail-links { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 14px; }
+  .detail-links { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
   .detail-link {
     display: flex; align-items: center; gap: 16px;
     padding: 18px 20px;
@@ -279,11 +282,30 @@
   .detail-link-desc { font-size: 12px; color: rgba(255,255,255,0.4); }
   .detail-link-arrow { color: var(--sky); font-size: 18px; }
 
-  #idBtnRan:hover, #idBtnYuri:hover { transform: scale(1.04); box-shadow: 0 0 50px rgba(255,255,255,0.6); }
-  #idBtnRan:active, #idBtnYuri:active { transform: scale(0.97); }
-  .hs-card:hover { transform: scale(1.04); box-shadow: 0 0 50px rgba(255,255,255,0.6); }
-  .dir-item:hover { transform: scale(1.04); box-shadow: 0 0 50px rgba(255,255,255,0.6); }
-  .detail-link:hover { background: rgba(0,191,255,0.12); border-color: var(--sky); box-shadow: 0 0 30px rgba(0,191,255,0.4); }
+  /* ─── UNIFIED 2Hs BUTTON ────────────────────── */
+  .hs-btn {
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba(255,255,255,0.1);
+    width: fit-content;
+    min-width: 280px;
+    box-sizing: border-box;
+  }
+  .hs-btn:hover { transform: scale(1.04); box-shadow: 0 0 50px rgba(255,255,255,0.6); }
+  .hs-btn:active { transform: scale(0.97); }
+  .hs-btn-orchid { width: 70px; height: 70px; object-fit: contain; flex-shrink: 0; }
+  .hs-btn-body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .hs-btn-num { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; opacity: 0.7; margin-bottom: 4px; text-align: center; }
+  .hs-btn-char { font-size: 52px; font-weight: 700; line-height: 1; text-align: center; }
+  .hs-btn-hint { font-size: 11px; color: rgba(255,255,255,0.35); text-align: center; margin-top: 8px; display: block; }
 
   /* ─── ANIMATIONS ─────────────────────────────── */
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
@@ -370,12 +392,12 @@
       <select id="dob-time" class="dob-select" style="width:100%;">
         <option value="">Select hour</option>
         <option value="00:30">00:00 – 01:00 — 🐭 子 (Rat, Tý)</option>
-        <option value="02:00">01:00 – 03:00 — 🐂 丑 (Ox, Sậu)</option>
+        <option value="02:00">01:00 – 03:00 — 🐂 丑 (Ox, Sửu)</option>
         <option value="04:00">03:00 – 05:00 — 🐅 寅 (Tiger, Dần)</option>
         <option value="06:00">05:00 – 07:00 — 🐇 卯 (Rabbit, Mão)</option>
         <option value="08:00">07:00 – 09:00 — 🐉 辰 (Dragon, Thìn)</option>
         <option value="10:00">09:00 – 11:00 — 🐍 巳 (Snake, Tỵ)</option>
-        <option value="12:00">11:00 – 13:00 — 🐴 午 (Horse, Ngỏ)</option>
+        <option value="12:00">11:00 – 13:00 — 🐴 午 (Horse, Ngọ)</option>
         <option value="14:00">13:00 – 15:00 — 🐏 未 (Goat, Mùi)</option>
         <option value="16:00">15:00 – 17:00 — 🐵 申 (Monkey, Thân)</option>
         <option value="18:00">17:00 – 19:00 — 🐓 酉 (Rooster, Dậu)</option>
@@ -402,11 +424,23 @@
         <img src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png" alt="Blue Orchid" style="width:60px; height:60px; object-fit:contain; filter:drop-shadow(0 0 12px rgba(0,191,255,0.5));">
       </div>
       <div class="hs-result-label">Your 2Hs ↓</div>
-      <a id="hsCard" class="hs-card" target="_blank">
-        <div class="hs-card-num" id="hsNum"></div>
-        <div class="hs-card-char" id="hsChar"></div>
+      <a id="hsCardRan" class="hs-btn" target="_blank">
+        <img class="hs-btn-orchid" src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png" alt="Blue Orchid">
+        <div class="hs-btn-body">
+          <div class="hs-btn-num" id="hsNumRan"></div>
+          <div class="hs-btn-char" id="hsCharRan"></div>
+        </div>
       </a>
-      <div id="hsHint" class="hs-open-hint">Tap to open your 2Hs ↗</div>
+      <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+      <a id="hsCardYuri" class="hs-btn" target="_blank" style="margin-top:12px;">
+        <img class="hs-btn-orchid" src="https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png" alt="Yuri Orchid">
+        <div class="hs-btn-body">
+          <div class="hs-btn-num" id="hsNumYuri"></div>
+          <div class="hs-btn-char" id="hsCharYuri"></div>
+        </div>
+      </a>
+      <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+      <button onclick="resetDOB()" style="margin-top:32px; width:75%; display:block; margin-left:auto; margin-right:auto; padding:14px; border-radius:10px; border:1px solid rgba(0,191,255,0.3); background:transparent; color:rgba(255,255,255,0.4); font-family:'Cinzel',serif; font-size:12px; letter-spacing:0.15em; cursor:pointer;">↺ &nbsp;START OVER</button>
     </div>
   </div>
 </div>
@@ -430,26 +464,28 @@
       placeholder="TYPE HERE" autocomplete="off" autocorrect="off" spellcheck="false"
       oninput="findByID()">
     <div id="idNoResult" style="color:#ff8a80; text-align:center; font-size:14px; display:none; margin-bottom:12px;">✕ &nbsp;ID CODE NOT FOUND</div>
-    <div id="idResultWrap" style="display:none; flex-direction:column; gap:12px;">
+    <div id="idResultWrap" style="display:none; flex-direction:column; align-items:center; gap:12px;">
       <div style="text-align:center; margin-top:50px; margin-bottom:8px;">
-        <img src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png" alt="Blue Orchid" style="width:60px; height:60px; object-fit:contain; filter:drop-shadow(0 0 18px rgba(0,191,255,0.5));">
-      </div>
-      <div style="font-size:14px; color:var(--sky); text-align:center; margin-bottom:8px; letter-spacing:0.1em;">Tap to open the sites for your 2Hs 👇</div>
-      <a id="idBtnRan" target="_blank" style="display:flex; flex-direction:column; align-items:center; padding:20px; border-radius:14px; border:1px solid rgba(255,255,255,0.15); text-decoration:none; color:inherit; transition:transform 0.2s, box-shadow 0.2s;">
-        <div style="font-family:'Cinzel',serif; font-size:36px; font-weight:700; margin-bottom:4px;" id="idNumRan"></div>
-        <div style="font-size:20px;" id="idLblRan"></div>
-        <div style="font-size:11px; opacity:0.5; margin-top:6px;">Bazi (iii) Ran ↗</div>
+      <a id="idBtnRan" class="hs-btn" target="_blank">
+        <img class="hs-btn-orchid" src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png" alt="Blue Orchid">
+        <div class="hs-btn-body">
+          <div class="hs-btn-num" id="idNumRan"></div>
+          <div class="hs-btn-char" id="idLblRan"></div>
+        </div>
       </a>
-      <a id="idBtnYuri" target="_blank" style="display:flex; flex-direction:column; align-items:center; padding:20px; border-radius:14px; border:1px solid rgba(255,255,255,0.15); text-decoration:none; color:inherit; transition:transform 0.2s, box-shadow 0.2s;">
-        <div style="font-family:'Cinzel',serif; font-size:36px; font-weight:700; margin-bottom:4px;" id="idNumYuri"></div>
-        <div style="font-size:20px;" id="idLblYuri"></div>
-        <div style="font-size:11px; opacity:0.5; margin-top:6px;">Bazi (iiii) Yuri ↗</div>
+      <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+      <a id="idBtnYuri" class="hs-btn" target="_blank" style="margin-top:12px;">
+        <img class="hs-btn-orchid" src="https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png" alt="Yuri Orchid">
+        <div class="hs-btn-body">
+          <div class="hs-btn-num" id="idNumYuri"></div>
+          <div class="hs-btn-char" id="idLblYuri"></div>
+        </div>
       </a>
+      <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+      <button onclick="resetID()" style="margin-top:20px; width:75%; display:block; margin-left:auto; margin-right:auto; padding:14px; border-radius:10px; border:1px solid rgba(0,191,255,0.3); background:transparent; color:rgba(255,255,255,0.4); font-family:'Cinzel',serif; font-size:12px; letter-spacing:0.15em; cursor:pointer;">↺ &nbsp;START OVER</button>
     </div>
   </div>
 </div>
-
-<!-- DIRECTORY LANDING -->
 <div id="directory" class="screen">
   <div class="inner-header">
     <button class="back-btn" onclick="goTo('home')">‹</button>
@@ -507,27 +543,27 @@
     <div class="detail-label" id="detailLabel"></div>
   </div>
   <div class="detail-links">
-    <a class="detail-link" id="detailRan" target="_blank">
-      <div class="detail-link-icon">🌿</div>
-      <div class="detail-link-info">
-        <div class="detail-link-name">Bazi (iii) Ran</div>
-        <div class="detail-link-desc">Open Ran's chart analysis</div>
+    <a class="hs-btn" id="detailRan" target="_blank">
+      <img class="hs-btn-orchid" src="https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png" alt="Blue Orchid">
+      <div class="hs-btn-body">
+        <div class="hs-btn-num" id="detailNumRan"></div>
+        <div class="hs-btn-char" id="detailLblRan"></div>
       </div>
-      <div class="detail-link-arrow">›</div>
     </a>
-    <a class="detail-link" id="detailYuri" target="_blank">
-      <div class="detail-link-icon">🌸</div>
-      <div class="detail-link-info">
-        <div class="detail-link-name">Bazi (iiii) Yuri</div>
-        <div class="detail-link-desc">Open Yuri's chart analysis</div>
+    <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
+    <a class="hs-btn" id="detailYuri" target="_blank" style="margin-top:12px;">
+      <img class="hs-btn-orchid" src="https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png" alt="Yuri Orchid">
+      <div class="hs-btn-body">
+        <div class="hs-btn-num" id="detailNumYuri"></div>
+        <div class="hs-btn-char" id="detailLblYuri"></div>
       </div>
-      <div class="detail-link-arrow">›</div>
     </a>
+    <span class="hs-btn-hint">Tap to open the 2Hs site ↗</span>
   </div>
 </div>
 
 <script>
-const labels = ["甲♡甲","甲♡乙","甲♡丙","甲♡丁","甲♡戊","甲♡己","甲♡庚","甲♡辛","甲♡壬","甲♡癸","乙♡甲","乙♡乙","乙♡丙","乙♡丁","乙♡戊","乙♡己","乙♡庚","乙♡辛","乙♡壬","乙♡癸","丙♡甲","丙♡乙","丙♡丙","丙♡丁","丙♡戊","丙♡己","丙♡庚","丙♡辛","丙♡壬","丙♡癸","丁♡甲","丁♡乙","丁♡丙","丁♡丁","丁♡戊","丁♡己","丁♡庚","丁♡辛","丁♡壬","丁♡癸","戊♡甲","戊♡乙","戊♡丙","戊♡丁","戊♡戊","戊♡己","戊♡庚","戊♡辛","戊♡壬","戊♡癸","己♡甲","己♡乙","己♡丙","己♡丁","己♡戊","己♡己","己♡庚","己♡辛","己♡壬","己♡癸","庚♡甲","庚♡乙","庚♡丙","庚♡丁","庚♡戊","庚♡己","庚♡庚","庚♡辛","庚♡壬","庚♡癸","辛♡甲","辛♡乙","辛♡丙","辛♡丁","辛♡戊","辛♡己","辛♡庚","辛♡辛","辛♡壬","辛♡癸","壬♡甲","壬♡乙","壬♡丙","壬♡丁","壬♡戊","壬♡己","壬♡庚","壬♡辛","壬♡壬","壬♡癸","癸♡甲","癸♡乙","癸♡丙","癸♡丁","癸♡戊","癸♡己","癸♡庚","癸♡辛","癸♡壬","癸♡癸"];
+const labels = ["甲 甲","甲 乙","甲 丙","甲 丁","甲 戊","甲 己","甲 庚","甲 辛","甲 壬","甲 癸","乙 甲","乙 乙","乙 丙","乙 丁","乙 戊","乙 己","乙 庚","乙 辛","乙 壬","乙 癸","丙 甲","丙 乙","丙 丙","丙 丁","丙 戊","丙 己","丙 庚","丙 辛","丙 壬","丙 癸","丁 甲","丁 乙","丁 丙","丁 丁","丁 戊","丁 己","丁 庚","丁 辛","丁 壬","丁 癸","戊 甲","戊 乙","戊 丙","戊 丁","戊 戊","戊 己","戊 庚","戊 辛","戊 壬","戊 癸","己 甲","己 乙","己 丙","己 丁","己 戊","己 己","己 庚","己 辛","己 壬","己 癸","庚 甲","庚 乙","庚 丙","庚 丁","庚 戊","庚 己","庚 庚","庚 辛","庚 壬","庚 癸","辛 甲","辛 乙","辛 丙","辛 丁","辛 戊","辛 己","辛 庚","辛 辛","辛 壬","辛 癸","壬 甲","壬 乙","壬 丙","壬 丁","壬 戊","壬 己","壬 庚","壬 辛","壬 壬","壬 癸","癸 甲","癸 乙","癸 丙","癸 丁","癸 戊","癸 己","癸 庚","癸 辛","癸 壬","癸 癸"];
 
 function getColors(n) {
   if (n <= 10) return { bg:"#2B5D34", tx:"#0CDD08", num:"#ffffff" };
@@ -538,24 +574,45 @@ function getColors(n) {
   if (n <= 60) return { bg:"#CA853C", tx:"#FFE302", num:"#ffffff" };
   if (n <= 70) return { bg:"#ffffff", tx:"#999999", num:"#999999" };
   if (n <= 80) return { bg:"#999999", tx:"#ffffff", num:"#ffffff" };
-  if (n <= 90) return { bg:"#00BFFF", tx:"#000073", num:"#000073" };
-  return { bg:"#000073", tx:"#00BFFF", num:"#00BFFF" };
+  if (n <= 90) return { bg:"#00BFFF", tx:"#0000cc", num:"#0000cc" };
+  return { bg:"#0000cc", tx:"#00BFFF", num:"#00BFFF" };
 }
 
-// ── Screen navigation ─────────────────────────
+// Screen navigation ─────────────────────────
 let currentScreen = 'home';
 function goTo(id) {
+  // Reset the screen we're leaving
+  if (currentScreen === 'find2hs') resetDOB();
+  if (currentScreen === 'quicksearch') resetID();
   document.getElementById(currentScreen).classList.remove('active');
   document.getElementById(id).classList.add('active');
   currentScreen = id;
   window.scrollTo(0, 0);
+  if (id === 'dir-ran' || id === 'dir-yuri') buildDir();
 }
 
-// ── DOB Calculator ────────────────────────────
+function resetDOB() {
+  document.getElementById('dob-day').value = '';
+  document.getElementById('dob-month').value = '';
+  document.getElementById('dob-year').value = '';
+  document.getElementById('dob-time').value = '';
+  document.getElementById('dobResult').style.display = 'none';
+  document.getElementById('dobError').style.display = 'none';
+  document.getElementById('genBtn').disabled = false;
+  document.getElementById('genBtn').textContent = 'Generate';
+}
+
+function resetID() {
+  document.getElementById('idInput').value = '';
+  document.getElementById('idResultWrap').style.display = 'none';
+  document.getElementById('idNoResult').style.display = 'none';
+}
+
+// DOB Calculator ────────────────────────────
 const BAZI_SCRIPT = "https://script.google.com/macros/s/AKfycbyvHebXLnz626zBeW_9Jt4FfBk49wr327apmgCiicJF0Qa0LlhVyBfJgR1Bd8jKyZ1ddA/exec";
 
 const STEMS   = {'甲':'Giáp','乙':'Ất','丙':'Bính','丁':'Đinh','戊':'Mậu','己':'Kỉ','庚':'Canh','辛':'Tân','壬':'Nhâm','癸':'Quí'};
-const BRANCHES= {'子':'Tý','丑':'Sậu','寅':'Dần','卯':'Mão','辰':'Thìn','巳':'Tỵ','午':'Ngỏ','未':'Mùi','申':'Thân','酉':'Dậu','戌':'Tuất','亥':'Hợi'};
+const BRANCHES= {'子':'Tý','丑':'Sửu','寅':'Dần','卯':'Mão','辰':'Thìn','巳':'Tỵ','午':'Ngọ','未':'Mùi','申':'Thân','酉':'Dậu','戌':'Tuất','亥':'Hợi'};
 const MON_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function toViet(t) {
@@ -633,42 +690,64 @@ function showResult(data, day, month, year, emoji) {
 
   const n = parseInt(data.hsNum);
   const c = getColors(n);
-  const card = document.getElementById('hsCard');
-  card.style.backgroundColor = c.bg;
-  card.style.color = c.tx;
-  card.style.display = 'flex';
-  card.href = 'https://sites.google.com/view/BaziiiRan' + String(n).padStart(3,'0');
-  document.getElementById('hsNum').textContent = 'No. ' + n;
-  document.getElementById('hsNum').style.color = c.tx;
-  document.getElementById('hsChar').textContent = labels[n-1];
+  const padded = String(n).padStart(3,'0');
 
-  document.getElementById('dobResult').style.display = 'block';
-  document.getElementById('hsHint').style.display = 'block';
+  ['hsCardRan','hsCardYuri'].forEach((id, i) => {
+    const btn = document.getElementById(id);
+    btn.style.backgroundColor = c.bg;
+    btn.style.color = c.tx;
+    btn.href = (i===0 ? 'https://sites.google.com/view/BaziiiRan' : 'https://sites.google.com/view/BaziiiiYuri') + padded;
+  });
+  document.getElementById('hsNumRan').textContent  = 'No. ' + n;
+  document.getElementById('hsNumRan').style.color  = c.num;
+  document.getElementById('hsCharRan').textContent = labels[n-1];
+  document.getElementById('hsNumYuri').textContent  = 'No. ' + n;
+  document.getElementById('hsNumYuri').style.color  = c.num;
+  document.getElementById('hsCharYuri').textContent = labels[n-1];
+
+  document.getElementById('dobResult').style.display = 'flex';
   document.getElementById('dobResult').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-// ── Build Directory grid ──────────────────────
+// Build Directory grid ──────────────────────
 function buildDir() {
-  buildDirGrid('dirGridRan', 'https://sites.google.com/view/BaziiiRan');
-  buildDirGrid('dirGridYuri', 'https://sites.google.com/view/BaziiiiYuri');
+  buildDirGrid('dirGridRan', 'https://sites.google.com/view/BaziiiRan', false);
+  buildDirGrid('dirGridYuri', 'https://sites.google.com/view/BaziiiiYuri', true);
 }
 
-function buildDirGrid(gridId, baseUrl) {
+function buildDirGrid(gridId, baseUrl, isYuri) {
   const grid = document.getElementById(gridId);
-  if (!grid || grid.children.length) return;
+  if (!grid) return;
+  grid.innerHTML = '';
+  const orchid = isYuri
+    ? 'https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png'
+    : 'https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png';
   labels.forEach((label, i) => {
     const n = i + 1, c = getColors(n);
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex; flex-direction:column; align-items:center;';
     const el = document.createElement('a');
-    el.className = 'dir-item';
-    el.style.backgroundColor = c.bg; el.style.color = c.tx;
+    el.className = 'hs-btn';
+    el.style.backgroundColor = c.bg;
+    el.style.color = c.tx;
     el.href = baseUrl + String(n).padStart(3,'0');
     el.target = '_blank';
-    el.innerHTML = `<div class="dir-num" style="color:${c.num}">${n}</div><div class="dir-label">${label}</div>`;
-    grid.appendChild(el);
+    el.innerHTML = `
+      <img class="hs-btn-orchid" src="${orchid}" alt="orchid">
+      <div class="hs-btn-body">
+        <div class="hs-btn-num" style="color:${c.num}">No. ${n}</div>
+        <div class="hs-btn-char">${label}</div>
+      </div>`;
+    const hint = document.createElement('span');
+    hint.className = 'hs-btn-hint';
+    hint.textContent = isYuri ? "Tap to open the 2Hs site ↗" : "Tap to open the 2Hs site ↗";
+    wrap.appendChild(el);
+    wrap.appendChild(hint);
+    grid.appendChild(wrap);
   });
 }
 
-// ── Detail screen ─────────────────────────────
+// Detail screen ─────────────────────────────
 function openDetail(n, from) {
   const c = getColors(n), padded = String(n).padStart(3,'0');
   const hero = document.getElementById('detailHero');
@@ -677,6 +756,16 @@ function openDetail(n, from) {
   document.getElementById('detailLabel').textContent = labels[n-1];
   document.getElementById('detailRan').href = "https://sites.google.com/view/BaziiiRan" + padded;
   document.getElementById('detailYuri').href = "https://sites.google.com/view/BaziiiiYuri" + padded;
+  document.getElementById('detailNumRan').textContent = 'No. ' + n;
+  document.getElementById('detailNumRan').style.color = c.num;
+  document.getElementById('detailLblRan').textContent = labels[n-1];
+  document.getElementById('detailNumYuri').textContent = 'No. ' + n;
+  document.getElementById('detailNumYuri').style.color = c.num;
+  document.getElementById('detailLblYuri').textContent = labels[n-1];
+  ['detailRan','detailYuri'].forEach(id => {
+    document.getElementById(id).style.backgroundColor = c.bg;
+    document.getElementById(id).style.color = c.tx;
+  });
   document.getElementById('detailBack').onclick = () => goTo(from);
   document.getElementById(currentScreen).classList.remove('active');
   document.getElementById('detail').classList.add('active');
@@ -684,7 +773,7 @@ function openDetail(n, from) {
   window.scrollTo(0,0);
 }
 
-// ── ID Search ─────────────────────────────────
+// ID Search ─────────────────────────────────
 const ID_SCRIPT = "https://script.google.com/macros/s/AKfycbwmnYT5qOfOBuGtzwwbS0a3gXSMY0QEb6sq529JTGbxipl7NOUNGywgmV2S09uK1CnG/exec";
 let clientGroups = {};
 
@@ -705,14 +794,16 @@ function findByID() {
     const n = parseInt(entry[0]), c = getColors(n), padded = String(n).padStart(3,'0');
     err.style.display = 'none';
     wrap.style.display = 'flex';
-    [document.getElementById('idBtnRan'), document.getElementById('idBtnYuri')].forEach((btn, i) => {
-      btn.style.backgroundColor = c.bg; btn.style.color = c.tx;
+    ['idBtnRan','idBtnYuri'].forEach((id, i) => {
+      const btn = document.getElementById(id);
+      btn.style.backgroundColor = c.bg;
+      btn.style.color = c.tx;
       btn.href = (i===0 ? 'https://sites.google.com/view/BaziiiRan' : 'https://sites.google.com/view/BaziiiiYuri') + padded;
     });
-    document.getElementById('idNumRan').textContent  = n;
+    document.getElementById('idNumRan').textContent  = 'No. ' + n;
     document.getElementById('idNumRan').style.color  = c.num;
     document.getElementById('idLblRan').textContent  = labels[n-1];
-    document.getElementById('idNumYuri').textContent = n;
+    document.getElementById('idNumYuri').textContent = 'No. ' + n;
     document.getElementById('idNumYuri').style.color = c.num;
     document.getElementById('idLblYuri').textContent = labels[n-1];
   } else {
@@ -728,7 +819,7 @@ function populateYears() {
   }
 }
 
-// ── Init on load ──────────────────────────────
+// Init on load ──────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   populateYears();
   loadClients();
