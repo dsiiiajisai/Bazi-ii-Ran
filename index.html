@@ -145,9 +145,11 @@
       <div class="card-arrow">›</div>
     </div>
   </div>
+  <div style="margin-top:100px;text-align:center;font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.15em;color:rgba(255,255,255,0.35);">
+    VISITS<br>
+    <span id="visitCount" style="font-size:22px;color:rgba(255,255,255,0.6);">—</span>
+  </div>
 </div>
-
-<!-- FIND 2Hs DOB Calculator -->
 <div id="find2hs" class="screen">
   <div class="inner-header">
     <button class="back-btn" onclick="goTo('home')">‹</button>
@@ -340,7 +342,7 @@
 <script>
 const BLUE_ORCHID = "https://i.postimg.cc/RFxTq7k9/615794401-26083104114608583-4849095449749115433-n.png";
 const YURI_ORCHID = "https://i.postimg.cc/L8QJyj2j/Whats-App-Image-2026-03-16-at-05-50-47.png";
-const BAZI_SCRIPT = "https://script.google.com/macros/s/AKfycbyvHebXLnz626zBeW_9Jt4FfBk49wr327apmgCiicJF0Qa0LlhVyBfJgR1Bd8jKyZ1ddA/exec";
+const BAZI_SCRIPT = "https://script.google.com/macros/s/AKfycbzEkiBnNwI9bEoFsRF2cGX7z2aCT7JIKBbG0Z3Tj3yeB7olaojn8POK3lLx8uN8TDqqNw/exec";
 const ID_SCRIPT   = "https://script.google.com/macros/s/AKfycbwmnYT5qOfOBuGtzwwbS0a3gXSMY0QEb6sq529JTGbxipl7NOUNGywgmV2S09uK1CnG/exec";
 
 const labels = ["甲 甲","甲 乙","甲 丙","甲 丁","甲 戊","甲 己","甲 庚","甲 辛","甲 壬","甲 癸","乙 甲","乙 乙","乙 丙","乙 丁","乙 戊","乙 己","乙 庚","乙 辛","乙 壬","乙 癸","丙 甲","丙 乙","丙 丙","丙 丁","丙 戊","丙 己","丙 庚","丙 辛","丙 壬","丙 癸","丁 甲","丁 乙","丁 丙","丁 丁","丁 戊","丁 己","丁 庚","丁 辛","丁 壬","丁 癸","戊 甲","戊 乙","戊 丙","戊 丁","戊 戊","戊 己","戊 庚","戊 辛","戊 壬","戊 癸","己 甲","己 乙","己 丙","己 丁","己 戊","己 己","己 庚","己 辛","己 壬","己 癸","庚 甲","庚 乙","庚 丙","庚 丁","庚 戊","庚 己","庚 庚","庚 辛","庚 壬","庚 癸","辛 甲","辛 乙","辛 丙","辛 丁","辛 戊","辛 己","辛 庚","辛 辛","辛 壬","辛 癸","壬 甲","壬 乙","壬 丙","壬 丁","壬 戊","壬 己","壬 庚","壬 辛","壬 壬","壬 癸","癸 甲","癸 乙","癸 丙","癸 丁","癸 戊","癸 己","癸 庚","癸 辛","癸 壬","癸 癸"];
@@ -501,6 +503,20 @@ function filterDir(gridId, val) {
   });
 }
 
+function loadCount() {
+  const cbName = 'countCB_' + Date.now();
+  const script = document.createElement('script');
+  script.src = BAZI_SCRIPT + '?action=count&callback=' + cbName;
+  window[cbName] = function(data) {
+    delete window[cbName];
+    if (script.parentNode) script.parentNode.removeChild(script);
+    if (data.count !== undefined) {
+      document.getElementById('visitCount').textContent = data.count.toLocaleString();
+    }
+  };
+  document.head.appendChild(script);
+}
+
 function populateYears() {
   const sel=document.getElementById('dob-year');
   for(let y=2026;y>=1920;y--){const o=document.createElement('option');o.value=o.textContent=y;sel.appendChild(o);}
@@ -509,6 +525,7 @@ function populateYears() {
 window.addEventListener('DOMContentLoaded',function(){
   populateYears();
   loadClients();
+  loadCount();
   buildDirGrid('dirGridRan','https://sites.google.com/view/BaziiiRan',BLUE_ORCHID);
   buildDirGrid('dirGridYuri','https://sites.google.com/view/BaziiiiYuri',YURI_ORCHID);
 });
