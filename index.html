@@ -378,11 +378,30 @@
 <script>
 const BLUE_ORCHID = "https://i.postimg.cc/MZsnjcLC/Blue-Orchid-Web-Email.png";
 const YURI_ORCHID = "https://i.postimg.cc/K8kWmKK7/Kisuge-single-web-email.png";
-function renderFcsItem(containerId, item, showCheck) {
+const GITHUB_BASE = "https://dsiiiajisai.github.io/Bazi-ii-Ran/";
+
+function timeToFcNum(time) {
+  const map = {
+    '00:30':1,'02:00':1,'23:30':1,
+    '04:00':2,'06:00':2,
+    '08:00':3,'10:00':3,
+    '12:00':4,'14:00':4,
+    '16:00':5,'18:00':5,
+    '20:00':6,'22:00':6
+  };
+  return map[time] || 1;
+}
+
+function getFcsImageUrl(group, hsNum, type, fcNum) {
+  const padded = String(hsNum).padStart(3,'0');
+  if (type === '4C') return GITHUB_BASE + group + '_' + padded + '_4C_' + fcNum + '.png';
+  return GITHUB_BASE + group + '_' + padded + '_S.png';
+}
+
+function renderFcsItem(containerId, item, showCheck, imageUrl) {
   const el = document.getElementById(containerId);
   if (!el || !item) return;
   el.innerHTML = '';
-  // Check if all fields are n.a. or empty
   const isNA = function(v) { return !v || v.trim() === '' || v.trim().toLowerCase() === 'n.a.' || v.trim().toLowerCase() === 'n. a.' || v.trim() === '0'; };
   if (isNA(item.cn) && isNA(item.vn) && isNA(item.en)) {
     const d = document.createElement('div');
@@ -393,15 +412,28 @@ function renderFcsItem(containerId, item, showCheck) {
   }
   const row = document.createElement('div');
   row.className = 'fcs-row';
-  // Emoji box — auto size based on count
+  // Emoji/image box
   const emojiBox = document.createElement('div');
   emojiBox.className = 'fcs-emoji-box';
-  const emojis = (item.emoji || '').trim();
-  // Count emojis to set font size
-  const emojiArr = [...emojis];
-  const count = emojiArr.length;
-  emojiBox.style.fontSize = count <= 1 ? '28px' : count <= 2 ? '22px' : count <= 4 ? '18px' : '14px';
-  emojiBox.textContent = emojis;
+  if (imageUrl) {
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.style.cssText = 'width:48px;height:48px;object-fit:contain;';
+    img.onerror = function() {
+      // fallback to emoji if image not found
+      emojiBox.removeChild(img);
+      const emojis = (item.emoji || '').trim();
+      const count = [...emojis].length;
+      emojiBox.style.fontSize = count <= 1 ? '28px' : count <= 2 ? '22px' : count <= 4 ? '18px' : '14px';
+      emojiBox.textContent = emojis;
+    };
+    emojiBox.appendChild(img);
+  } else {
+    const emojis = (item.emoji || '').trim();
+    const count = [...emojis].length;
+    emojiBox.style.fontSize = count <= 1 ? '28px' : count <= 2 ? '22px' : count <= 4 ? '18px' : '14px';
+    emojiBox.textContent = emojis;
+  }
   // MR box
   const mrBox = document.createElement('div');
   mrBox.className = 'fcs-mr-box';
@@ -422,17 +454,15 @@ function renderFcsItem(containerId, item, showCheck) {
   el.appendChild(row);
 }
 
-function showFcsResults(data) {
-  // Always show Ran wrap if 4Cs has data
+function showFcsResults(data, hsNum, fcNum) {
   if (data.ran4Cs) {
-    renderFcsItem('fcs-ran-list', data.ran4Cs, true);
-    renderFcsItem('str-ran-wrap', data.ranStr, false);
+    renderFcsItem('fcs-ran-list', data.ran4Cs, true, getFcsImageUrl('Ran', hsNum, '4C', fcNum));
+    renderFcsItem('str-ran-wrap', data.ranStr, false, getFcsImageUrl('Ran', hsNum, 'S', null));
     document.getElementById('fcs-ran-wrap').style.display = 'block';
   }
-  // Always show Yuri wrap if 4Cs has data
   if (data.yuri4Cs) {
-    renderFcsItem('fcs-yuri-list', data.yuri4Cs, false);
-    renderFcsItem('str-yuri-wrap', data.yuriStr, false);
+    renderFcsItem('fcs-yuri-list', data.yuri4Cs, false, getFcsImageUrl('Yuri', hsNum, '4C', fcNum));
+    renderFcsItem('str-yuri-wrap', data.yuriStr, false, getFcsImageUrl('Yuri', hsNum, 'S', null));
     document.getElementById('fcs-yuri-wrap').style.display = 'block';
   }
 }
@@ -558,7 +588,8 @@ function calculateDOB() {
     res.scrollIntoView({behavior:'smooth',block:'start'});
     btn.disabled=false; btn.textContent='Generate';
     // Show 4Cs and Structure
-    showFcsResults(data);
+    const fcNum = timeToFcNum(time);
+    showFcsResults(data, n, fcNum);
   };
   script.onerror=function(){cleanup();errEl.textContent='Error connecting. Please try again.';errEl.style.display='block';btn.disabled=false;btn.textContent='Generate';};
   script.src=url; document.head.appendChild(script);
